@@ -143,13 +143,13 @@ static int send_greeting(uint8_t mode_mask, struct client_info *client)
     int i;
     ServerGreeting greet;
     memset(&greet, 0, sizeof(greet));
-    greet.Modes = authmode & mode_mask;
+    greet.Modes = htonl(authmode & mode_mask);
 
     for (i = 0; i < 16; i++)
         greet.Challenge[i] = rand() % 16;
     for (i = 0; i < 16; i++)
         greet.Salt[i] = rand() % 16;
-    greet.Count = (1 << 12);
+    greet.Count = htonl(1 << 12);
 
     int rv = send(socket, &greet, sizeof(greet), 0);
     if (rv < 0) {

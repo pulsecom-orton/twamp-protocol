@@ -203,6 +203,7 @@ int main(int argc, char *argv[])
         perror("Error receiving Server Greeting");
         exit(EXIT_FAILURE);
     }
+    greet.Modes = ntohl(greet.Modes);
     if (greet.Modes == 0) {
         close(servfd);
         fprintf(stderr, "The server does not support any usable Mode\n");
@@ -214,7 +215,7 @@ int main(int argc, char *argv[])
     printf("Sending SetUpResponse...\n");
     SetUpResponse resp;
     memset(&resp, 0, sizeof(resp));
-    resp.Mode = greet.Modes & authmode;
+    resp.Mode = htonl(greet.Modes & authmode);
     rv = send(servfd, &resp, sizeof(resp), 0);
     if (rv <= 0) {
         close(servfd);
